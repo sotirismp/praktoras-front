@@ -1,0 +1,60 @@
+.card-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.icon {
+  width: 25px;
+  height: 25px;
+}
+
+.input {
+  width: 80%;
+  height: 50px;
+  padding-left: 1vh;
+  background-color: rgba(0, 0, 0, 0);
+  color: white;
+  border: none;
+  border-bottom: 2px solid white;
+  transition: 0.1s ease-in;
+}
+.input::placeholder {
+  color: white;
+}
+.input:focus {
+  outline: none;
+  border-bottom: 2px solid #371b58;
+}
+
+.submit {
+  width: 80%;
+  height: 50px;
+  color: white;
+  border-radius: 20px;
+  background-color: #371b58;
+  border: 1px solid #371b58;
+  transition: 0.1s ease-in;
+}
+.submit:hover {
+  border: 1px solid white;
+}
+
+.message {
+  opacity: 1;
+  width: 80%;
+  background-color: rgb(255, 65, 97);
+  height: 50px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+
+.hr-line {
+  margin-top: 50px;
+  width: 90%;
+  border: 1px solid white;
+}

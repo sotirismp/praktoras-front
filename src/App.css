@@ -1,38 +1,10 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+body {
+  height: 100vh;
+  /*background-image: url(https://uppergrade.gr/wp-content/uploads/2015/12/%CE%B5%CE%B9%CE%BA%CF%8C%CE%BD%CE%B1_Viber_2020-11-09_20-05-172.jpg);
+  background-size: cover;
+  background-position: 80% 50%;*/
+  background-color: #371b58;
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  align-items: center;
 }
