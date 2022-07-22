@@ -1,6 +1,7 @@
 .card {
   margin-top: 10vh;
-  background-color: #7858a6;
+  position: static;
+  background-color: var(--dark-blue);
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   width: 100%;
   border-radius: 20px;
@@ -22,6 +23,7 @@
     font-size: 7vw;
   }
   .card {
+    width: 100vw;
     margin-top: 0;
     border-radius: 0px;
     overflow: auto;
