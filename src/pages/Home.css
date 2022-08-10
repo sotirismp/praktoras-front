@@ -16,9 +16,11 @@ section {
   position: relative;
   text-align: center;
   min-height: 300px;
+  width:100%;
 }
 .body-container {
   display: flex;
+  gap:1vh;
   justify-content: space-evenly;
   flex-direction: row;
   flex-wrap: wrap;

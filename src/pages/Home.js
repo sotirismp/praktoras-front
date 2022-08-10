@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../UI/Navbar";
+import Laiko from "../UI/Laiko";
 import Spinner from "../UI/Spinner";
+import Jackpots from "../UI/Jackpots";
 import "./Home.css";
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -10,6 +12,7 @@ function Home(props) {
   const [isBurgerOpen, setIsBurgerOpen] = useState(false);
   const [subs, setSubs] = useState([]);
   const [laiko, setLaiko] = useState(null);
+  const [jackpots, setJackpots] = useState(null);
   let navigate = useNavigate();
   useEffect(() => {
     if (!props.token) return navigate("/login");
@@ -46,6 +49,7 @@ function Home(props) {
           }),
         });
         const jackpots = await resp3.json();
+        setJackpots(jackpots);
         console.log(jackpots);
       } else {
         props.logoutHandler();
@@ -94,7 +98,14 @@ function Home(props) {
         <main>
           <section id="jackpots">
             Jackpots
-            {!laiko && <Spinner>Loading Λαικό</Spinner>}
+            <div className="body-container">
+              {!laiko && <Spinner>Loading Λαικό</Spinner>}
+              {laiko && <Laiko laiko={laiko}></Laiko>}
+            </div>
+            <div className="body-container">
+              {!jackpots && <Spinner>Loading Jackpots</Spinner>}
+              {jackpots && <Jackpots jackpots={jackpots}></Jackpots>}
+            </div>
           </section>
           <hr></hr>
 
@@ -111,9 +122,9 @@ function Home(props) {
                       Μέρες
                     </div>
                     <div className="card__face card__face--back">
-                      Εναρξη συνδρομής: {epochToDate(e.start)}
+                      Έναρξη: {epochToDate(e.start)}
                       <br></br>
-                      Λήξη συνδρομής: {epochToDate(e.end)}
+                      Λήξη: {epochToDate(e.end)}
                     </div>
                   </div>
                 </div>

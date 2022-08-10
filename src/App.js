@@ -5,7 +5,7 @@ import Home from "./pages/Home";
 import "./App.css";
 import { useEffect, useState } from "react";
 
-const host = "http://192.168.1.100:9000";
+const host = "http://192.168.2.8:9000";
 //const host = "";
 
 function App() {
