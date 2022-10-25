@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Navbar from "../UI/Navbar";
 import Laiko from "../UI/Laiko";
 import Spinner from "../UI/Spinner";
@@ -7,6 +7,19 @@ import Jackpots from "../UI/Jackpots";
 import "./Home.css";
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+function msort(arr) {
+  for (var i = 0; i < arr.length; i++) {
+    for (var j = i + 1; j < arr.length; j++) {
+      if (arr[i] > arr[j]) {
+        var swap = arr[i];
+        arr[i] = arr[j];
+        arr[j] = swap;
+      }
+    }
+  }
+  return arr;
+}
 
 function Home(props) {
   const [isBurgerOpen, setIsBurgerOpen] = useState(false);
@@ -39,7 +52,6 @@ function Home(props) {
           }),
         });
         const laikoData = await resp2.json();
-        console.log(laikoData);
         setLaiko(laikoData);
         const resp3 = await fetch(props.host + "/jackpots", {
           method: "POST",
@@ -49,8 +61,13 @@ function Home(props) {
           }),
         });
         const jackpots = await resp3.json();
+
+        jackpots.data.lotto.last.winningNumbers.list = [
+          ...msort(jackpots.data.lotto.last.winningNumbers.list),
+        ];
+        jackpots.data.joker.last.winningNumbers.list.sort();
+
         setJackpots(jackpots);
-        console.log(jackpots);
       } else {
         props.logoutHandler();
       }
@@ -84,8 +101,6 @@ function Home(props) {
     return formattedToday;
   };
 
-  /* <Nav.Link onClick={props.logoutHandler}>Logout</Nav.Link>;
-   */
   return (
     <>
       <Navbar
@@ -93,18 +108,21 @@ function Home(props) {
         burgerHandler={burgerHandler}
         linkHandler={linkHandler}
         username={props.username}
+        logoutHandler={props.logoutHandler}
       ></Navbar>
+
       {!isBurgerOpen && (
         <main>
           <section id="jackpots">
             Jackpots
             <div className="body-container">
-              {!laiko && <Spinner>Loading Λαικό</Spinner>}
-              {laiko && <Laiko laiko={laiko}></Laiko>}
-            </div>
-            <div className="body-container">
               {!jackpots && <Spinner>Loading Jackpots</Spinner>}
               {jackpots && <Jackpots jackpots={jackpots}></Jackpots>}
+            </div>
+            <hr></hr>
+            <div className="body-container">
+              {!laiko && <Spinner>Loading Λαικό</Spinner>}
+              {laiko && <Laiko laiko={laiko}></Laiko>}
             </div>
           </section>
           <hr></hr>

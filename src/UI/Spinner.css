@@ -3,6 +3,9 @@
   flex-direction: column;
   width: 200px;
 }
+.svg {
+  animation: rotate 2s linear infinite;
+}
 .svg-spinner {
   animation: rotate 2s linear infinite;
 }

@@ -1,364 +1,584 @@
-import React, { useEffect } from "react";
+import React from "react";
 import "./Jackpots.css";
+import { AiOutlineCheck } from "react-icons/ai";
 import tzokerLogo from "../assets/tzoker1.png";
 import lottoLogo from "../assets/lotto.png";
 import protoLogo from "../assets/proto.png";
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-function Jackpots(props) {
-  window.mobileCheck = function () {
-    let check = false;
-    (function (a) {
-      if (
-        /(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(
-          a
-        ) ||
-        /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(
-          a.substr(0, 4)
-        )
-      )
-        check = true;
-    })(navigator.userAgent || navigator.vendor || window.opera);
-    return check;
-  };
+function numberWithCommas(x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
 
-  async function printDiv() {
-    if (window.mobileCheck()) {
-      window.location.href = "http://192.168.2.8:9000/file";
-    } else {
-      let w = window.open();
-      w.document.write(`<style>.jackpot-con{
-        --width:1000px;
-        width:var(--width);
-        height:calc(var(--width)*1.4142);
+function isTuesday(time, day) {
+  //day 0=sunday, 1=monday etc..
+  const drawDate = new Date(time);
+  return drawDate.getDay() === day ? true : false;
+}
+function epochToDate(epoch) {
+  let j = new Date(epoch);
+  return (
+    j.getUTCDate().toString().padStart(2, "0") +
+    "/" +
+    (j.getUTCMonth() + 1).toString().padStart(2, "0") +
+    "/" +
+    j.getUTCFullYear()
+  );
+}
+
+function Jackpots(props) {
+  async function printDiv(id) {
+    let w = window.open();
+    w.document.write(`<style>.jackpot-con {
+        --width: 1000px;
+        min-width: var(--width);
+        margin-top: 3vh;
+        width: var(--width);
+        height: calc(var(--width) * 1.4142);
         color: black !important;
         background-color: white;
         border-radius: 1vh;
-        font-size: calc(var(--width)*0.075);
+        font-size: calc(var(--width) * 0.075);
         overflow: hidden;
-    }
-    .jackpot-logo{
-        width:100%;
-        height:12.5%;
-    }
-    .title-con{
+      }
+      .jackpot-logo {
+        width: 100%;
+        height: 12.5%;
+      }
+      .title-con {
         display: flex;
         justify-content: space-around;
         align-items: center;
-        height:15%;
-    }
-    
-    .draw-info{
+        height: 15%;
+      }
+      
+      .draw-info {
+        width: 45%;
         display: flex;
-        flex-direction: column;
-    }
-    .draw-info div{
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .draw-info div {
         color: black !important;
-    
-    }
-    .draw-day-con td{
-        font-size: calc(var(--width)*0.030);
+      }
+      .draw-info div:nth-child(2) {
+        color: red !important;
+      }
+      .draw-info div:nth-child(4) {
+        color: red !important;
+      }
+      .draw-info div {
+      }
+      .red {
+        font-size: inherit;
+        color: red !important;
+      }
+      .draw-day-con td {
+        font-size: calc(var(--width) * 0.03);
         color: black !important;
-        padding: 0 5vh 0 5vh;
-        border:1px solid black;
-    
-    }
-    .tzoker-day-con div,div{
-        font-size: calc(var(--width)*0.05);
-    }
-    .info{
+        padding: 10px 50px 10px 50px;
+        border: 1px solid black;
+      }
+      .tzoker-day-con div,
+      div {
+        font-size: calc(var(--width) * 0.05);
+      }
+      .info {
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: calc(var(--width)*0.05);
-        height:5%;
+        font-size: calc(var(--width) * 0.05);
+        height: 5%;
         color: black !important;
-    }
-    .draw-numbers{
+      }
+      .draw-numbers {
         display: flex;
         justify-content: space-around;
         align-items: center;
-        height:10%;
+        height: 10%;
         border: 1px solid black;
-    }
-    .draw-numbers div{
+      }
+      .draw-numbers div {
         color: red !important;
-        font-size: calc(var(--width)*0.1);
-    }
-    .draw-results{
-        height:30%;
-        width:100%;
+        font-size: calc(var(--width) * 0.1);
+      }
+      .draw-results {
+        height: 30%;
+        width: 100%;
         table-layout: fixed;
-    }
-    .draw-results th{
+      }
+      .draw-results th {
         color: BLACK !important;
         border: 1px solid black;
-        font-size: calc(var(--width)*0.02);
-        text-align: center;
-    }
-    .draw-results td{
-        font-size: calc(var(--width)*0.035);
+        font-size: calc(var(--width) * 0.02);
+      }
+      .draw-results td {
+        font-size: calc(var(--width) * 0.035);
         color: BLACK !important;
         border: 1px solid black;
-        text-align: center;
-    }
-    .jackpot-prize{
+        text-align:center;
+      }
+      .jackpot-prize {
         height: 12.5%;
         display: flex;
         align-items: center;
         justify-content: center;
-        width:100%;
-        color:red !important;
-        font-size: calc(var(--width)*0.175);
+        width: 100%;
+        color: red !important;
+        border-bottom: 1px solid black;
+        font-size: calc(var(--width) * 0.175);
         font-weight: 900;
-    }
-    .jackpot-footer{
+      }
+      .jackpot-footer {
         display: flex;
         justify-content: center;
         align-items: center;
-        width:99%;
-        height:9%;
+        width: 100%;
+        height: 10%;
         color: black !important;
-        font-size: calc(var(--width)*0.025);
-        text-align:center; border:2px solid black;}</style>`);
-      w.document.write(`<div class='jackpot-con'>`);
-      w.document.write(document.getElementById("joker").innerHTML);
-      w.document.write(`</div>`);
-      await sleep(50);
-      w.print();
-      w.close();
-    }
+        text-align:center;
+        font-size: calc(var(--width) * 0.025);
+      }
+      </style>`);
+    w.document.write(`<div class='jackpot-con'>`);
+    w.document.write(document.getElementById(id).innerHTML);
+    w.document.write(`</div>`);
+    await sleep(50);
+    w.print();
+    w.close();
   }
 
   return (
     <>
-      <div className="jackpot-con" id="joker" onClick={printDiv}>
-        <img src={tzokerLogo} className="jackpot-logo"></img>
+      <div className="jackpot-con" id="joker" onClick={() => printDiv("joker")}>
+        <img src={tzokerLogo} className="jackpot-logo" alt="Tzoker logo"></img>
         <div className="title-con">
           <table className="draw-day-con">
             <thead></thead>
             <tbody>
               <tr>
                 <td>ΤΡΙΤΗ</td>
-                <td>V</td>
+                <td>
+                  {isTuesday(props.jackpots?.data.joker.last.drawTime, 2) && (
+                    <AiOutlineCheck style={{ fill: "red" }} />
+                  )}
+                </td>
               </tr>
               <tr>
                 <td>ΠΕΜΠΤΗ</td>
-                <td>V</td>
+                <td>
+                  {isTuesday(props.jackpots?.data.joker.last.drawTime, 4) && (
+                    <AiOutlineCheck style={{ fill: "red" }} />
+                  )}
+                </td>
               </tr>
               <tr>
                 <td>ΚΥΡΙΑΚΗ</td>
-                <td>V</td>
+                <td>
+                  {isTuesday(props.jackpots?.data.joker.last.drawTime, 1) && (
+                    <AiOutlineCheck style={{ fill: "red" }} />
+                  )}
+                </td>
               </tr>
             </tbody>
           </table>
           <div className="draw-info">
-            <div>ΚΛΗΡΩΣΗ: 2454</div>
-            <div>ΤΗΣ: 04/08/2022</div>
+            <div>ΚΛΗΡΩΣΗ:</div>
+            <div>&nbsp;{props.jackpots?.data.joker.last.drawId}</div>
+            <div>ΤΗΣ:</div>
+            <div>
+              &nbsp;{epochToDate(props.jackpots?.data.joker.last.drawTime)}
+            </div>
           </div>
         </div>
         <div className="info">ΑΡΙΘΜΟΙ ΠΟΥ ΚΛΗΡΩΘΗΚΑΝ</div>
         <div className="draw-numbers">
-          <div>1</div>
-          <div>2</div>
-          <div>5</div>
-          <div>10</div>
-          <div>20</div>
+          <div>{props.jackpots?.data.joker.last.winningNumbers.list[0]}</div>
+          <div>{props.jackpots?.data.joker.last.winningNumbers.list[1]}</div>
+          <div>{props.jackpots?.data.joker.last.winningNumbers.list[2]}</div>
+          <div>{props.jackpots?.data.joker.last.winningNumbers.list[3]}</div>
+          <div>{props.jackpots?.data.joker.last.winningNumbers.list[4]}</div>
           <div>+</div>
-          <div>20</div>
+          <div>{props.jackpots?.data.joker.last.winningNumbers.bonus[0]}</div>
         </div>
         <div className="info">ΑΠΟΤΕΛΕΣΜΑΤΑ ΔΙΑΛΟΓΗΣ</div>
         <table className="draw-results">
-          <tr>
-            <th>ΚΑΤΗΓΟΡΙΕΣ ΕΠΙΤΥΧΙΩΝ</th>
-            <th>ΣΩΣΤΕΣ ΠΡΟΒΛΕΨΕΙΣ</th>
-            <th>ΕΠΙΤΥΧΙΕΣ</th>
-            <th>ΚΕΡΔΟΣ ΑΝΑ ΕΠΙΤΥΧΙΑ</th>
-          </tr>
-          <tr>
-            <td>I</td>
-            <td>6</td>
-            <td>1.500.000 €</td>
-            <td>0 €</td>
-          </tr>
-          <tr>
-            <td>II</td>
-            <td>5+1</td>
-            <td>0</td>
-            <td>0 €</td>
-          </tr>
-          <tr>
-            <td>III</td>
-            <td>5</td>
-            <td>4</td>
-            <td>1.500 €</td>
-          </tr>
-          <tr>
-            <td>IV</td>
-            <td>4</td>
-            <td>447</td>
-            <td>30,00 €</td>
-          </tr>
-          <tr>
-            <td>V</td>
-            <td>3</td>
-            <td>8887</td>
-            <td>1,50 €</td>
-          </tr>
+          <tbody>
+            <tr>
+              <th>ΚΑΤΗΓΟΡΙΕΣ ΕΠΙΤΥΧΙΩΝ</th>
+              <th>ΣΩΣΤΕΣ ΠΡΟΒΛΕΨΕΙΣ</th>
+              <th>ΕΠΙΤΥΧΙΕΣ</th>
+              <th>ΚΕΡΔΟΣ ΑΝΑ ΕΠΙΤΥΧΙΑ</th>
+            </tr>
+            <tr>
+              <td>I</td>
+              <td>5+1</td>
+              <td>
+                <div className="red">
+                  {props.jackpots?.data.joker.last.prizeCategories[0].winners}
+                </div>
+              </td>
+              <td>
+                <div className="red">
+                  {numberWithCommas(
+                    props.jackpots?.data.joker.last.prizeCategories[0].divident
+                  )}{" "}
+                  €
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>II</td>
+              <td>5</td>
+              <td>
+                <div className="red">
+                  {props.jackpots?.data.joker.last.prizeCategories[1].winners}
+                </div>
+              </td>
+              <td>
+                <div className="red">
+                  {numberWithCommas(
+                    props.jackpots?.data.joker.last.prizeCategories[1].divident
+                  )}{" "}
+                  €
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>III</td>
+              <td>4+1</td>
+              <td>
+                <div className="red">
+                  {props.jackpots?.data.joker.last.prizeCategories[2].winners}
+                </div>
+              </td>
+              <td>2.500 €</td>
+            </tr>
+            <tr>
+              <td>IV</td>
+              <td>4</td>
+              <td>
+                <div className="red">
+                  {props.jackpots?.data.joker.last.prizeCategories[3].winners}
+                </div>
+              </td>
+              <td>50,00 €</td>
+            </tr>
+            <tr>
+              <td>V</td>
+              <td>3+1</td>
+              <td>
+                <div className="red">
+                  {props.jackpots?.data.joker.last.prizeCategories[4].winners}
+                </div>
+              </td>
+              <td>50,00 €</td>
+            </tr>
+            <tr>
+              <td>VI</td>
+              <td>3</td>
+              <td>
+                <div className="red">
+                  {props.jackpots?.data.joker.last.prizeCategories[5].winners}
+                </div>
+              </td>
+              <td>2,00 €</td>
+            </tr>
+            <tr>
+              <td>VII</td>
+              <td>2+1</td>
+              <td>
+                <div className="red">
+                  {props.jackpots?.data.joker.last.prizeCategories[6].winners}
+                </div>
+              </td>
+              <td>2,00 €</td>
+            </tr>
+            <tr>
+              <td>VIII</td>
+              <td>1+1</td>
+              <td>
+                <div className="red">
+                  {props.jackpots?.data.joker.last.prizeCategories[7].winners}
+                </div>
+              </td>
+              <td>1,50 €</td>
+            </tr>
+          </tbody>
         </table>
-        <div className="jackpot-prize">16.000.000 €</div>
+        <div className="jackpot-prize">
+          {numberWithCommas(
+            props.jackpots?.data.joker.active.prizeCategories[0]
+              .minimumDistributed
+          )}{" "}
+          €
+        </div>
         <div className="jackpot-footer">
           ΤΟΥΛΑΧΙΣΤΟΝ ΘΑ ΜΟΙΡΑΣΤΟΥ ΟΙ ΤΥΧΕΡΟΙ ΝΙΚΗΤΕΣ ΤΗΣ Ι ΚΑΤΗΓΟΡΙΑΣ ΣΤΗΝ
           ΕΠΟΜΕΝΗ ΚΛΗΡΩΣΗ
         </div>
       </div>
-      <div className="jackpot-con" id="lotto">
-        <img src={lottoLogo} className="jackpot-logo"></img>
+      <div className="jackpot-con" id="lotto" onClick={() => printDiv("lotto")}>
+        <img src={lottoLogo} className="jackpot-logo" alt="Lotto logo"></img>
         <div className="title-con">
           <table className="draw-day-con">
-            <tr>
-              <td>ΤΕΤΑΡΤΗ</td>
-              <td>V</td>
-            </tr>
-            <tr>
-              <td>ΣΑΒΒΑΤΟ</td>
-              <td>V</td>
-            </tr>
+            <tbody>
+              <tr>
+                <td>ΤΕΤΑΡΤΗ</td>
+                <td>
+                  {isTuesday(props.jackpots?.data.lotto.last.drawTime, 3) && (
+                    <AiOutlineCheck style={{ fill: "red" }} />
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <td>ΣΑΒΒΑΤΟ</td>
+                <td>
+                  {isTuesday(props.jackpots?.data.lotto.last.drawTime, 6) && (
+                    <AiOutlineCheck style={{ fill: "red" }} />
+                  )}
+                </td>
+              </tr>
+            </tbody>
           </table>
           <div className="draw-info">
-            <div>ΚΛΗΡΩΣΗ: 2453</div>
-            <div>ΤΗΣ: 04/08/2022</div>
+            <div>ΚΛΗΡΩΣΗ:</div>
+            <div>&nbsp;{props.jackpots?.data.lotto.last.drawId}</div>
+            <div>ΤΗΣ:</div>
+            <div>
+              &nbsp;{epochToDate(props.jackpots?.data.lotto.last.drawTime)}
+            </div>
           </div>
         </div>
         <div className="info">ΑΡΙΘΜΟΙ ΠΟΥ ΚΛΗΡΩΘΗΚΑΝ</div>
         <div className="draw-numbers">
-          <div>1</div>
-          <div>2</div>
-          <div>5</div>
-          <div>10</div>
-          <div>20</div>
-          <div>30</div>
+          <div>{props.jackpots?.data.lotto.last.winningNumbers.list[0]}</div>
+          <div>{props.jackpots?.data.lotto.last.winningNumbers.list[1]}</div>
+          <div>{props.jackpots?.data.lotto.last.winningNumbers.list[2]}</div>
+          <div>{props.jackpots?.data.lotto.last.winningNumbers.list[3]}</div>
+          <div>{props.jackpots?.data.lotto.last.winningNumbers.list[4]}</div>
+          <div>{props.jackpots?.data.lotto.last.winningNumbers.list[5]}</div>
           <div>+</div>
-          <div>20</div>
+          <div>{props.jackpots?.data.lotto.last.winningNumbers.bonus}</div>
         </div>
         <div className="info">ΑΠΟΤΕΛΕΣΜΑΤΑ ΔΙΑΛΟΓΗΣ</div>
-        <table className="draw-results">
-          <tr>
-            <th>ΚΑΤΗΓΟΡΙΕΣ ΕΠΙΤΥΧΙΩΝ</th>
-            <th>ΣΩΣΤΕΣ ΠΡΟΒΛΕΨΕΙΣ</th>
-            <th>ΕΠΙΤΥΧΙΕΣ</th>
-            <th>ΚΕΡΔΟΣ ΑΝΑ ΕΠΙΤΥΧΙΑ</th>
-          </tr>
-          <tr>
-            <td>I</td>
-            <td>6</td>
-            <td>1.500.000 €</td>
-            <td>0 €</td>
-          </tr>
-          <tr>
-            <td>II</td>
-            <td>5+1</td>
-            <td>0</td>
-            <td>0 €</td>
-          </tr>
-          <tr>
-            <td>III</td>
-            <td>5</td>
-            <td>4</td>
-            <td>1.500 €</td>
-          </tr>
-          <tr>
-            <td>IV</td>
-            <td>4</td>
-            <td>447</td>
-            <td>30,00 €</td>
-          </tr>
-          <tr>
-            <td>V</td>
-            <td>3</td>
-            <td>8887</td>
-            <td>1,50 €</td>
-          </tr>
-        </table>
-        <div className="jackpot-prize">16.000.000 €</div>
-        <div className="jackpot-footer">
-          ΤΟΥΛΑΧΙΣΤΟΝ ΘΑ ΜΟΙΡΑΣΤΟΥ ΟΙ ΤΥΧΕΡΟΙ ΝΙΚΗΤΕΣ ΤΗΣ Ι ΚΑΤΗΓΟΡΙΑΣ ΣΤΗΝ
-          ΕΠΟΜΕΝΗ ΚΛΗΡΩΣΗ
+        <div>
+          <table className="draw-results">
+            <tbody>
+              <tr>
+                <th>ΚΑΤΗΓΟΡΙΕΣ ΕΠΙΤΥΧΙΩΝ</th>
+                <th>ΣΩΣΤΕΣ ΠΡΟΒΛΕΨΕΙΣ</th>
+                <th>ΕΠΙΤΥΧΙΕΣ</th>
+                <th>ΚΕΡΔΟΣ ΑΝΑ ΕΠΙΤΥΧΙΑ</th>
+              </tr>
+              <tr>
+                <td>I</td>
+                <td>6</td>
+                <td>
+                  <div className="red">
+                    {props.jackpots?.data.lotto.last.prizeCategories[0].winners}
+                  </div>
+                </td>
+                <td>
+                  <div className="red">
+                    {
+                      props.jackpots?.data.lotto.last.prizeCategories[0]
+                        .divident
+                    }
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>II</td>
+                <td>5+1</td>
+                <td>
+                  <div className="red">
+                    {props.jackpots?.data.lotto.last.prizeCategories[1].winners}
+                  </div>
+                </td>
+                <td>50.000 €</td>
+              </tr>
+              <tr>
+                <td>III</td>
+                <td>5</td>
+                <td>
+                  <div className="red">
+                    {props.jackpots?.data.lotto.last.prizeCategories[2].winners}
+                  </div>
+                </td>
+                <td>1.500 €</td>
+              </tr>
+              <tr>
+                <td>IV</td>
+                <td>4</td>
+                <td>
+                  <div className="red">
+                    {props.jackpots?.data.lotto.last.prizeCategories[3].winners}
+                  </div>
+                </td>
+                <td>30,00 €</td>
+              </tr>
+              <tr>
+                <td>V</td>
+                <td>3</td>
+                <td>
+                  <div className="red">
+                    {props.jackpots?.data.lotto.last.prizeCategories[4].winners}
+                  </div>
+                </td>
+                <td>1,50 €</td>
+              </tr>
+            </tbody>
+          </table>
+          <div className="jackpot-prize">
+            {numberWithCommas(
+              props.jackpots?.data.lotto.active.prizeCategories[0]
+                .minimumDistributed
+            )}{" "}
+            €
+          </div>
+          <div className="jackpot-footer">
+            ΤΟΥΛΑΧΙΣΤΟΝ ΘΑ ΜΟΙΡΑΣΤΟΥ ΟΙ ΤΥΧΕΡΟΙ ΝΙΚΗΤΕΣ ΤΗΣ Ι ΚΑΤΗΓΟΡΙΑΣ ΣΤΗΝ
+            ΕΠΟΜΕΝΗ ΚΛΗΡΩΣΗ
+          </div>
         </div>
       </div>
-      <div className="jackpot-con">
-        <img src={protoLogo} className="jackpot-logo"></img>
+      <div className="jackpot-con" id="proto" onClick={() => printDiv("proto")}>
+        <img src={protoLogo} className="jackpot-logo" alt="Proto logo"></img>
         <div className="title-con">
           <table className="draw-day-con">
-            <tr>
-              <td>ΤΡΙΤΗ</td>
-              <td>V</td>
-            </tr>
-            <tr>
-              <td>ΠΕΜΠΤΗ</td>
-              <td>V</td>
-            </tr>
-            <tr>
-              <td>ΚΥΡΙΑΚΗ</td>
-              <td>V</td>
-            </tr>
+            <tbody>
+              <tr>
+                <td>ΤΡΙΤΗ</td>
+                <td>
+                  {isTuesday(props.jackpots?.data.proto.last.drawTime, 2) && (
+                    <AiOutlineCheck style={{ fill: "red" }} />
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <td>ΠΕΜΠΤΗ</td>
+                <td>
+                  {isTuesday(props.jackpots?.data.proto.last.drawTime, 4) && (
+                    <AiOutlineCheck style={{ fill: "red" }} />
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <td>ΚΥΡΙΑΚΗ</td>
+                <td>
+                  {isTuesday(props.jackpots?.data.proto.last.drawTime, 1) && (
+                    <AiOutlineCheck style={{ fill: "red" }} />
+                  )}
+                </td>
+              </tr>
+            </tbody>
           </table>
           <div className="draw-info">
-            <div>ΚΛΗΡΩΣΗ: 2454</div>
-            <div>ΤΗΣ: 04/08/2022</div>
+            <div>ΚΛΗΡΩΣΗ:</div>
+            <div>&nbsp;{props.jackpots?.data.proto.last.drawId}</div>
+            <div>ΤΗΣ:</div>
+            <div>
+              &nbsp;{epochToDate(props.jackpots?.data.proto.last.drawTime)}
+            </div>
           </div>
         </div>
         <div className="info">ΑΡΙΘΜΟΣ ΠΟΥ ΚΛΗΡΩΘΗΚΕ</div>
         <div className="draw-numbers">
-          <div>1</div>
-          <div>2</div>
-          <div>5</div>
-          <div>2</div>
-          <div>3</div>
-          <div>6</div>
-          <div>9</div>
+          <div>{props.jackpots?.data.proto.last.winningNumbers.list[0]}</div>
+          <div>{props.jackpots?.data.proto.last.winningNumbers.list[1]}</div>
+          <div>{props.jackpots?.data.proto.last.winningNumbers.list[2]}</div>
+          <div>{props.jackpots?.data.proto.last.winningNumbers.list[3]}</div>
+          <div>{props.jackpots?.data.proto.last.winningNumbers.list[4]}</div>
+          <div>{props.jackpots?.data.proto.last.winningNumbers.list[5]}</div>
+          <div>{props.jackpots?.data.proto.last.winningNumbers.list[6]}</div>
         </div>
         <div className="info">ΑΠΟΤΕΛΕΣΜΑΤΑ ΔΙΑΛΟΓΗΣ</div>
         <table className="draw-results">
-          <tr>
-            <th>ΚΑΤΗΓΟΡΙΕΣ ΕΠΙΤΥΧΙΩΝ</th>
-            <th>ΣΩΣΤΕΣ ΠΡΟΒΛΕΨΕΙΣ</th>
-            <th>ΕΠΙΤΥΧΙΕΣ</th>
-            <th>ΚΕΡΔΟΣ ΑΝΑ ΕΠΙΤΥΧΙΑ</th>
-          </tr>
-          <tr>
-            <td>I</td>
-            <td>6</td>
-            <td>1.500.000 €</td>
-            <td>0 €</td>
-          </tr>
-          <tr>
-            <td>II</td>
-            <td>5+1</td>
-            <td>0</td>
-            <td>0 €</td>
-          </tr>
-          <tr>
-            <td>III</td>
-            <td>5</td>
-            <td>4</td>
-            <td>1.500 €</td>
-          </tr>
-          <tr>
-            <td>IV</td>
-            <td>4</td>
-            <td>447</td>
-            <td>30,00 €</td>
-          </tr>
-          <tr>
-            <td>V</td>
-            <td>3</td>
-            <td>8887</td>
-            <td>1,50 €</td>
-          </tr>
+          <tbody>
+            <tr>
+              <th>ΚΑΤΗΓΟΡΙΕΣ ΕΠΙΤΥΧΙΩΝ</th>
+              <th>ΣΩΣΤΕΣ ΠΡΟΒΛΕΨΕΙΣ</th>
+              <th>ΕΠΙΤΥΧΙΕΣ</th>
+              <th>ΚΕΡΔΟΣ ΑΝΑ ΕΠΙΤΥΧΙΑ</th>
+            </tr>
+            <tr>
+              <td>I</td>
+              <td>7</td>
+              <td>
+                <div className="red">
+                  {props.jackpots?.data.proto.last.prizeCategories[0].winners}
+                </div>
+              </td>
+              <td>
+                <div className="red">
+                  {props.jackpots?.data.proto.last.prizeCategories[0].divident}{" "}
+                  €
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>II</td>
+              <td>6</td>
+              <td>
+                <div className="red">
+                  {props.jackpots?.data.proto.last.prizeCategories[1].winners}
+                </div>
+              </td>
+              <td>
+                <div className="red">25.000,00 €</div>
+              </td>
+            </tr>
+            <tr>
+              <td>III</td>
+              <td>5</td>
+              <td>
+                <div className="red">
+                  {props.jackpots?.data.proto.last.prizeCategories[2].winners}
+                </div>
+              </td>
+              <td>2.500,00 €</td>
+            </tr>
+            <tr>
+              <td>IV</td>
+              <td>4</td>
+              <td>
+                <div className="red">
+                  {props.jackpots?.data.proto.last.prizeCategories[3].winners}
+                </div>
+              </td>
+              <td>250,00 €</td>
+            </tr>
+            <tr>
+              <td>V</td>
+              <td>3</td>
+              <td>
+                <div className="red">
+                  {props.jackpots?.data.proto.last.prizeCategories[4].winners}
+                </div>
+              </td>
+              <td>25,00 €</td>
+            </tr>
+            <tr>
+              <td>VI</td>
+              <td>2</td>
+              <td>
+                <div className="red">
+                  {props.jackpots?.data.proto.last.prizeCategories[5].winners}
+                </div>
+              </td>
+              <td>2,00 €</td>
+            </tr>
+          </tbody>
         </table>
-        <div className="jackpot-prize">16.000.000 €</div>
+        <div className="jackpot-prize">
+          {numberWithCommas(
+            props.jackpots?.data.proto.active.prizeCategories[0]
+              .minimumDistributed
+          )}{" "}
+          €
+        </div>
         <div className="jackpot-footer">
           ΤΟΥΛΑΧΙΣΤΟΝ ΘΑ ΜΟΙΡΑΣΤΟΥ ΟΙ ΤΥΧΕΡΟΙ ΝΙΚΗΤΕΣ ΤΗΣ Ι ΚΑΤΗΓΟΡΙΑΣ ΣΤΗΝ
           ΕΠΟΜΕΝΗ ΚΛΗΡΩΣΗ

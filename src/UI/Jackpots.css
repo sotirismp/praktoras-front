@@ -1,96 +1,120 @@
-.jackpot-con{
-    --width: 300px;
-    margin-top: 3vh;
-    width:var(--width);
-    height:calc(var(--width)*1.4142);
-    color: black !important;
-    background-color: white;
-    border-radius: 1vh;
-    font-size: calc(var(--width)*0.075);
-    overflow: hidden;
+.jackpot-con {
+  --width: 300px;
+  min-width: var(--width);
+  margin-top: 3vh;
+  width: var(--width);
+  height: calc(var(--width) * 1.4142);
+  color: black !important;
+  background-color: white;
+  border-radius: 1vh;
+  font-size: calc(var(--width) * 0.075);
+  overflow: hidden;
 }
-.jackpot-logo{
-    width:100%;
-    height:12.5%;
+.jackpot-logo {
+  width: 100%;
+  height: 12.5%;
 }
-.title-con{
-    display: flex;
-    justify-content: space-around   ;
-    align-items: center;
-    height:15%;
+.title-con {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 15%;
 }
 
-.draw-info{
-    display: flex;
-    flex-direction: column;
+.draw-info {
+  width: 45%;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
 }
-.draw-info div{
-    color: black !important;
-
+.draw-info div {
+  color: black !important;
 }
-.draw-day-con td{
-    font-size: calc(var(--width)*0.030);
-    color: black !important;
-    padding: 0 10px 0 10px;
-    border:1px solid black
-
+.draw-info div:nth-child(2) {
+  color: red !important;
 }
-.tzoker-day-con div,div{
-    
-    font-size: calc(var(--width)*0.05);
+.draw-info div:nth-child(4) {
+  color: red !important;
 }
-.info{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(var(--width)*0.05);
-    height:5%;
-    color: black !important;
+.draw-info div {
 }
-.draw-numbers{
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    height:10%;
-    border: 1px solid black;
+.red {
+  font-size: inherit;
+  color: red !important;
 }
-.draw-numbers div{
-    color: red !important;
-    font-size: calc(var(--width)*0.1);
+.draw-day-con td {
+  font-size: calc(var(--width) * 0.03);
+  color: black !important;
+  padding: 0 10px 0 10px;
+  border: 1px solid black;
 }
-.draw-results{
-    height:30%;
-    width:100%;
-    table-layout: fixed;
+.tzoker-day-con div,
+div {
+  font-size: calc(var(--width) * 0.05);
 }
-.draw-results th{
-    color: BLACK !important;
-    border: 1px solid black;
-    font-size: calc(var(--width)*0.02);
+.info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(var(--width) * 0.05);
+  height: 5%;
+  color: black !important;
 }
-.draw-results td{
-    font-size: calc(var(--width)*0.035);
-    color: BLACK !important;
-    border: 1px solid black;
+.draw-numbers {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  height: 10%;
+  border: 1px solid black;
 }
-.jackpot-prize{
-    height: 12.5%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width:100%;
-    color:red !important;
-    border: 1px solid black;
-    font-size: calc(var(--width)*0.125);
-    font-weight: 900;
+.draw-numbers div {
+  color: red !important;
+  font-size: calc(var(--width) * 0.1);
 }
-.jackpot-footer{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width:100%;
-    height:10%;
-    color: black !important;
-    
-    font-size: calc(var(--width)*0.025);
+.draw-results {
+  height: 30%;
+  width: 100%;
+  table-layout: fixed;
+}
+.draw-results th {
+  color: BLACK !important;
+  border: 1px solid black;
+  font-size: calc(var(--width) * 0.02);
+}
+.draw-results td {
+  font-size: calc(var(--width) * 0.035);
+  color: BLACK !important;
+  border: 1px solid black;
+  text-align: center;
+}
+#lotto .draw-results th {
+  padding: 3px;
+}
+#lotto .draw-results td {
+  padding: 3px;
+}
+#proto .draw-results th {
+  padding: 1px;
+}
+#proto .draw-results td {
+  padding: 1px;
+}
+.jackpot-prize {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  color: red !important;
+  border-bottom: 1px solid black;
+  font-size: calc(var(--width) * 0.125);
+  font-weight: 900;
+}
+.jackpot-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  color: black !important;
+  text-align: center;
+  font-size: calc(var(--width) * 0.025);
 }

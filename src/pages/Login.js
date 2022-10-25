@@ -8,6 +8,7 @@ import SvgUser from "../assets/SvgUser.js";
 import SvgLock from "../assets/SvgLock.js";
 
 const Login = (props) => {
+  document.title = "Praktoras login";
   let navigate = useNavigate();
 
   const userRef = useRef();

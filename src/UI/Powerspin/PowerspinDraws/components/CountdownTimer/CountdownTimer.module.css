@@ -1,0 +1,16 @@
+.countdownTimerContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.countdownTimerTitle {
+  padding: 0.5vh;
+  margin-top: 0.5vh;
+  font-size: 1.75vh;
+}
+
+.countdownDigitsContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}

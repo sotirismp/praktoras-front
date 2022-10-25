@@ -1,0 +1,63 @@
+.logoContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.logo {
+  width: 15vh;
+  height: 15vh;
+  background: url("../assets/logo.png") no-repeat center center;
+  background-size: 15vh;
+}
+.mainContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+}
+.title {
+  font-size: 2vh;
+  font-weight: 900;
+  width: 40vh;
+  height: 4vh;
+  border-radius: 0 0 1vh 1vh;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  background: linear-gradient(rgb(0, 0, 163), rgb(74, 74, 206));
+}
+.info {
+  background: radial-gradient(
+      100% 100% at 0% 0%,
+      #7700ee 0%,
+      rgba(119, 0, 238, 0) 100%
+    ),
+    radial-gradient(
+      100% 100% at 100% 100%,
+      #7f0063 0%,
+      rgba(127, 0, 99, 0) 100%
+    ),
+    radial-gradient(140% 140% at 100% 0%, #21017b 0%, rgba(44, 2, 85, 0) 100%),
+    radial-gradient(
+      180% 180% at 0% 100%,
+      rgba(255, 69, 94, 0.7) 0%,
+      rgba(255, 42, 169, 0) 100%,
+      rgba(255, 69, 94, 0) 100%
+    ),
+    linear-gradient(0deg, #7700ee, #7700ee);
+  border-radius: 1vh;
+  margin-top: 3vh;
+  padding: 1vh;
+  font-size: 1.75vw;
+}
+
+.headerContainer {
+  /*display: flex;
+  flex-direction: row;
+  justify-content: space-around;*/
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  width: 100vw;
+  height: 15vh;
+}

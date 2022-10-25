@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "./Laiko.css";
+import classes from "./Laiko.module.css";
 
 function Laiko(props) {
   const epochToDate = (epoch) => {
@@ -19,22 +19,26 @@ function Laiko(props) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   }
   return (
-    <div className="laiko-con">
-      <div className="laiko-row">
-        Jackpot Λαικού:{" "}
-        <div className="bold">{numberWithCommas(props.laiko.jackpot)} €</div>
+    <div className={classes.laikoCon}>
+      <div className={classes.laikoRow}>Jackpot Λαικού</div>
+      <div className={classes.laikoRow}>
+        <div className={classes.bold}>
+          {numberWithCommas(props.laiko.jackpot)} €
+        </div>
       </div>
-      <div className="laiko-row">
-        Επόμενη Κλήρωση:{" "}
-        <div className="bold">{epochToDate(props.laiko.next_draw)}</div>
+
+      <div className={classes.laikoRow}>Επόμενη Κλήρωση</div>
+      <div className={classes.laikoRow}>
+        <div className={classes.bold}>{epochToDate(props.laiko.next_draw)}</div>
       </div>
-      <div className="laiko-row">
+
+      <div className={classes.laikoRow}>
         <a
           href={"http://laheia.gr" + props.laiko.url}
-          className="button"
+          className={classes.button}
           target="_blank"
         >
-          Λήψη PDF
+          Λήψη Λαικού PDF
         </a>
       </div>
     </div>

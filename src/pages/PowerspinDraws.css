@@ -1,0 +1,5 @@
+.powerspin-container {
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(rgb(45, 45, 212), rgb(3, 15, 55));
+}

@@ -4,6 +4,7 @@ import Container from "../UI/Container";
 import { Link } from "react-router-dom";
 
 function Register() {
+  document.title = "Εκδήλωση ενδιαφέροντος";
   return (
     <Container>
       <Card>

@@ -1,0 +1,53 @@
+.containerDrawRow {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: space-between;
+  width: 22vh;
+  height: 5vh;
+  background-color: rgba(0, 0, 0, 0.3);
+  margin: 0.5vh;
+  border-radius: 1vh;
+  border: solid 1px blue;
+}
+.drawTime {
+  padding-left: 0.5vh;
+  font-size: 2vh;
+  margin: 0.5vh;
+  width: 100%;
+  color: rgb(233, 211, 13) !important;
+  font-weight: 700;
+}
+.containerDrawNumbers {
+  display: flex;
+  justify-content: space-around;
+  width: 15vh;
+}
+.drawCard {
+  font-size: 2.5vh;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  font-weight: 900;
+  border-radius: 1vh;
+  height: 4.5vh;
+  width: 5vh;
+  margin: 0 0.25vh 0 0.25vh;
+}
+.symbolBg {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: url("../../assets/symbol.png") no-repeat center center;
+}
+.redBg {
+  background: linear-gradient(rgb(172, 0, 34), rgb(223, 58, 91));
+}
+.blueBg {
+  background: linear-gradient(rgb(0, 102, 255), cyan);
+}
+.greenBg {
+  background: linear-gradient(rgb(18, 85, 18), rgb(60, 218, 60));
+}

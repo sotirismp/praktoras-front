@@ -1,0 +1,18 @@
+.digitCardContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 10vh;
+  padding: 0.25vh;
+  margin: 0.75vh;
+  align-items: center;
+  background: linear-gradient(rgb(0, 0, 163), rgb(74, 74, 206));
+  border-radius: 1vh;
+}
+
+.digitCardDigits {
+  font-size: 4.5vh;
+}
+.digitCardText {
+  font-size: 1vh;
+}

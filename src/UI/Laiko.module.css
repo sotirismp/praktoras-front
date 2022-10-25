@@ -1,0 +1,36 @@
+.laikoCon {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 3vh;
+  border-radius: 3vh;
+  width: 60%;
+}
+.laikoRow {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+}
+.button {
+  font-size: 2vh;
+  background-color: var(--red) !important;
+  color: white !important;
+  border: 1px solid var(--red);
+  align-self: baseline;
+  padding: 2vh;
+  border-radius: 1.5vh;
+  margin: 1vh;
+}
+.button:hover {
+  border: 1px solid white;
+}
+.bold {
+  font-size: 3.5vh;
+  padding: 0vh 0vh 3vh 0vh;
+  letter-spacing: 5px;
+  font-weight: 900;
+  color: var(--red) !important;
+}

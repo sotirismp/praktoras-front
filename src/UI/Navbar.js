@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import "./Navbar.css";
 import { Link } from "react-router-dom";
 import SvgUser from "../assets/SvgUser.js";
+import SvgMessage from "../assets/SvgMessage";
 import Nav from "react-bootstrap/Nav";
 import kino from "../assets/kino.png";
 import tzoker from "../assets/tzoker.png";
 import powerspin from "../assets/powerspin.png";
+import Typed from "react-typed";
 
 function Navbar(props) {
+  const [messageBubble, setMessageBubble] = useState(2);
   return (
     <>
       <header className="navbar" expand="lg" bg="dark" variant="dark">
@@ -21,7 +24,15 @@ function Navbar(props) {
             >
               <div className="burger"></div>
             </div>
-            <Link to="/#">Praktoras</Link>
+            <Link to="/#" style={{ width: "200px" }}>
+              <Typed
+                strings={["Praktoras.com"]}
+                typeSpeed={100}
+                backSpeed={50}
+                loop={true}
+                className="typed"
+              />
+            </Link>
           </div>
           <div className="nav-link-container">
             <Link to="/#jackpots" onClick={props.linkHandler}>
@@ -36,19 +47,39 @@ function Navbar(props) {
                 Kino
               </div>
             </Link>
-            <Link to="/#powerSpin" id="powerspin" onClick={props.linkHandler}>
+            <Link
+              target="_blank"
+              to="/powerspinDraws"
+              id="powerspin"
+              onClick={props.linkHandler}
+            >
               <div className="nav-link-item">
                 <img src={powerspin} alt="" className="nav-image"></img>
                 PowerSpin
               </div>
             </Link>
           </div>
-          <Nav.Item>
-            <Link to="profile" className="links">
-              <SvgUser className="icon"></SvgUser>
-              {props.username}
-            </Link>
-          </Nav.Item>
+          <div className="right-nav-container">
+            <Nav.Item className="nav-link-item messages">
+              <Link to="messages" className="links">
+                <SvgMessage className="icon icon2"></SvgMessage>
+                Μηνύματα
+                {messageBubble && (
+                  <div className="message-bubble">{messageBubble}</div>
+                )}
+              </Link>
+            </Nav.Item>
+            <Nav.Item className="nav-link-item">
+              <Link to="profile" className="links">
+                <SvgUser className="icon"></SvgUser>
+                {props.username}
+              </Link>
+
+              <a onClick={props.logoutHandler} style={{ fontSize: "1.5vh" }}>
+                Αποσύνδεση
+              </a>
+            </Nav.Item>
+          </div>
         </div>
       </header>
       <div
@@ -70,7 +101,7 @@ function Navbar(props) {
           Kino
         </Link>
         <hr></hr>
-        <Link to="/#powerSpin" onClick={props.linkHandler}>
+        <Link to="/powerspinDraws" onClick={props.linkHandler}>
           <img src={powerspin} alt="" className="nav-image"></img>
           PowerSpin
         </Link>
