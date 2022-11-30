@@ -27,11 +27,16 @@ function PowerspinStatsContent(props) {
   ];
 
   return (
-    <div className={classes.mainContent}>
-      <div className={classes.container}>
-        <PowerspinStatsItem title={data[0].title} delays={data[0].delays} />
-        {/* <PowerspinStatsItem title="Καθυστερήσεις #1 spin" />
+    <div className={classes.mainContentContainer}>
+      <div className={classes.mainContent}>
+        <div className={classes.mainContentTitle}>Καθυστερήσεις PowerSpin</div>
+        <div className={classes.container}>
+          <PowerspinStatsItem title={"1ος Τροχός"} delays={data[0].delays} />
+          <PowerspinStatsItem title={"2ος Τροχός"} delays={data[0].delays} />
+          <PowerspinStatsItem title={"3ος Τροχός"} delays={data[0].delays} />
+          {/* <PowerspinStatsItem title="Καθυστερήσεις #1 spin" />
         <PowerspinStatsItem title="Καθυστερήσεις #1 spin" /> */}
+        </div>
       </div>
     </div>
   );
